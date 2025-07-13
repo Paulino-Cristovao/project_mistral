@@ -1,0 +1,238 @@
+# DocBridgeGuard 2.0 Compliance Policies Configuration
+
+# Language to jurisdiction mapping
+language_map:
+  en: eu_gdpr
+  fr: eu_gdpr
+  de: eu_gdpr
+  es: eu_gdpr
+  it: eu_gdpr
+  sw: africa_ndpr
+  ha: africa_ndpr
+  yo: africa_ndpr
+  ig: africa_ndpr
+  zh: apac_pdpa
+  ja: apac_pdpa
+  ko: apac_pdpa
+
+# Compliance policies by jurisdiction and document type
+compliance_policies:
+  eu_gdpr:
+    contract:
+      redaction_level: moderate
+      audit_logging: basic
+      encryption: field_level
+      retention_policy: 7_years
+      legal_basis: GDPR_Art6_1b
+      special_categories: false
+      consent_required: false
+      
+    medical:
+      redaction_level: strict
+      audit_logging: full
+      encryption: end_to_end
+      retention_policy: gdpr_article_17
+      legal_basis: GDPR_Art9_2h
+      special_categories: true
+      consent_required: true
+      
+    financial:
+      redaction_level: strict
+      audit_logging: full
+      encryption: end_to_end
+      retention_policy: 10_years
+      legal_basis: GDPR_Art6_1c
+      special_categories: false
+      consent_required: false
+      
+    research:
+      redaction_level: maximum
+      audit_logging: full
+      encryption: end_to_end
+      retention_policy: ethics_committee
+      legal_basis: GDPR_Art6_1f
+      special_categories: true
+      consent_required: true
+      
+    legal:
+      redaction_level: moderate
+      audit_logging: full
+      encryption: field_level
+      retention_policy: statutory_limitation
+      legal_basis: GDPR_Art6_1b
+      special_categories: false
+      consent_required: false
+
+  africa_ndpr:
+    contract:
+      redaction_level: strict
+      audit_logging: full
+      encryption: end_to_end
+      retention_policy: 5_years
+      legal_basis: NDPR_Art6_1b
+      special_categories: false
+      consent_required: true
+      
+    medical:
+      redaction_level: maximum
+      audit_logging: full
+      encryption: end_to_end
+      retention_policy: ndpr_article_25
+      legal_basis: NDPR_Art9_2h
+      special_categories: true
+      consent_required: true
+      
+    financial:
+      redaction_level: strict
+      audit_logging: full
+      encryption: end_to_end
+      retention_policy: 7_years
+      legal_basis: NDPR_Art6_1c
+      special_categories: false
+      consent_required: true
+
+  us_hipaa:
+    medical:
+      redaction_level: strict
+      audit_logging: full
+      encryption: end_to_end
+      retention_policy: 6_years
+      legal_basis: HIPAA_164_506
+      special_categories: true
+      consent_required: true
+      
+    research:
+      redaction_level: maximum
+      audit_logging: full
+      encryption: end_to_end
+      retention_policy: irb_approval
+      legal_basis: HIPAA_164_512_i
+      special_categories: true
+      consent_required: true
+
+# PII patterns and detection rules
+pii_patterns:
+  # Names
+  person_names:
+    patterns:
+      - "\\b[A-Z][a-z]+ [A-Z][a-z]+\\b"  # First Last
+      - "\\b[A-Z][a-z]+, [A-Z][a-z]+\\b"  # Last, First
+    confidence: 0.7
+    redaction: "[NAME_REDACTED]"
+    
+  # Email addresses
+  email:
+    patterns:
+      - "\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Z|a-z]{2,}\\b"
+    confidence: 0.9
+    redaction: "[EMAIL_REDACTED]"
+    
+  # Phone numbers
+  phone:
+    patterns:
+      - "\\+?\\d{1,4}?[-.\\s]?\\(?\\d{1,3}?\\)?[-.\\s]?\\d{1,4}[-.\\s]?\\d{1,4}[-.\\s]?\\d{1,9}"
+    confidence: 0.8
+    redaction: "[PHONE_REDACTED]"
+    
+  # Addresses
+  address:
+    patterns:
+      - "\\d+\\s+[A-Za-z0-9\\s,]+\\b(Street|St|Avenue|Ave|Road|Rd|Drive|Dr|Lane|Ln|Boulevard|Blvd)\\b"
+    confidence: 0.6
+    redaction: "[ADDRESS_REDACTED]"
+    
+  # Social Security Numbers (US)
+  ssn:
+    patterns:
+      - "\\b\\d{3}-\\d{2}-\\d{4}\\b"
+      - "\\b\\d{9}\\b"
+    confidence: 0.9
+    redaction: "[SSN_REDACTED]"
+    
+  # Credit Card Numbers
+  credit_card:
+    patterns:
+      - "\\b\\d{4}[\\s-]?\\d{4}[\\s-]?\\d{4}[\\s-]?\\d{4}\\b"
+    confidence: 0.85
+    redaction: "[CC_REDACTED]"
+    
+  # Bank Account Numbers
+  bank_account:
+    patterns:
+      - "\\b\\d{8,17}\\b"  # Generic bank account pattern
+    confidence: 0.6
+    redaction: "[ACCOUNT_REDACTED]"
+    
+  # Medical Record Numbers
+  medical_record:
+    patterns:
+      - "\\bMRN[:\\s]*\\d+\\b"
+      - "\\bMedical Record[:\\s]*\\d+\\b"
+    confidence: 0.8
+    redaction: "[MRN_REDACTED]"
+
+# Entity types for bridge extraction
+entity_types:
+  person:
+    spacy_labels: ["PERSON"]
+    privacy_impact: high
+    
+  organization:
+    spacy_labels: ["ORG"]
+    privacy_impact: medium
+    
+  location:
+    spacy_labels: ["GPE", "LOC"]
+    privacy_impact: medium
+    
+  date:
+    spacy_labels: ["DATE"]
+    privacy_impact: low
+    
+  money:
+    spacy_labels: ["MONEY"]
+    privacy_impact: medium
+    
+  product:
+    spacy_labels: ["PRODUCT"]
+    privacy_impact: low
+
+# Risk assessment rules
+risk_assessment:
+  high_risk_combinations:
+    - ["PERSON", "MONEY"]  # Person + financial data
+    - ["PERSON", "GPE"]    # Person + location
+    - ["PERSON", "ORG", "MONEY"]  # Person + org + money
+    
+  medium_risk_combinations:
+    - ["ORG", "MONEY"]     # Organization + financial data
+    - ["ORG", "DATE"]      # Organization + date
+    
+  compliance_thresholds:
+    gdpr_article_9: 0.3    # Threshold for special category data
+    hipaa_phi: 0.4         # Threshold for PHI data
+    pci_dss: 0.6          # Threshold for payment data
+
+# Retention policies
+retention_policies:
+  7_years:
+    duration_days: 2555  # 7 * 365
+    description: "Standard business records retention"
+    
+  5_years:
+    duration_days: 1825  # 5 * 365
+    description: "Standard contract retention"
+    
+  10_years:
+    duration_days: 3650  # 10 * 365
+    description: "Financial records retention"
+    
+  gdpr_article_17:
+    duration_days: 2555  # 7 * 365 (typical)
+    description: "GDPR right to erasure compliance"
+    auto_delete: true
+    
+  ndpr_article_25:
+    duration_days: 1825  # 5 * 365
+    description: "NDPR data retention limits"
+    auto_delete: true
