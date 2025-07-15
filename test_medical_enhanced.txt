@@ -1,0 +1,47 @@
+MEDICAL RECORD - ENHANCED TEST
+
+Patient: Maria Santos Silva
+Medical Record Number: MR-2024-001
+Date of Birth: 1985-03-15
+BI: 123456789B
+Phone: +258 84 567 890
+Email: maria.santos@hospital.mz
+
+MEDICAL HISTORY:
+- Diabetes type 2 (diagnosed 2018)
+- Hypertension (hipertensão arterial)
+- Previous surgery: Appendectomy (2015)
+- Allergies: Penicillin
+
+CURRENT TREATMENT:
+- Medication: Metformin 500mg twice daily
+- Prescription: Dr. João Medico, CRM-123456
+- Therapy: Nutritional counseling
+- Blood test results: HbA1c 7.2%
+
+SYMPTOMS:
+- Fatigue and increased thirst
+- Frequent urination
+- Blurred vision
+
+HEALTHCARE PROVIDERS:
+- Primary Doctor: Dr. Ana Physician
+- Nurse: Enfermeira Rosa
+- Hospital: Hospital Central de Maputo
+- Clinic: Clínica Médica do Sommerschield
+
+INSURANCE INFORMATION:
+- Health Insurance: Seguro Saúde Nacional
+- Patient ID: PSN-789012
+- Coverage: Full medical coverage
+
+ADDITIONAL NOTES:
+- Emergency contact: +258 82 345 678
+- Ambulance service required for transport
+- Lab results pending from laboratório central
+- Diagnosis confirmed by medical examination
+
+PRIVACY NOTICE:
+This prontuário contains sensitive medical information.
+Patient consent obtained for treatment.
+Historical medical records maintained securely.

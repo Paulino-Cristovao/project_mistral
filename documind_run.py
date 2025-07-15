@@ -32,13 +32,13 @@ def analyze_document_simple(
     selected_providers: List[str],
     selected_jurisdictions: List[str],
     risk_assessment_enabled: bool = True
-) -> Tuple[str, str, str, str, str]:
+) -> Tuple[str, str, str, str, str, str]:
     """
     Simplified document analysis with demo functionality
     """
     
     if not files or len(files) == 0:
-        return "⚠️ Please upload at least one document", "", "", "", ""
+        return "⚠️ Please upload at least one document", "", "", "", "", ""
     
     # Handle multiple files
     all_content = []
@@ -60,7 +60,7 @@ def analyze_document_simple(
                 all_content.append(str(file)[:1000])
                 
     except Exception as e:
-        return f"❌ Error reading files: {str(e)}", "", "", "", ""
+        return f"❌ Error reading files: {str(e)}", "", "", "", "", ""
     
     # Combine content for analysis
     combined_content = "\n\n--- DOCUMENT SEPARATOR ---\n\n".join(all_content)
@@ -90,7 +90,10 @@ def analyze_document_simple(
     # Recommendations
     recommendations = generate_simple_recommendations(analysis_results)
     
-    return status, compliance_matrix, analytics, comparison, recommendations
+    # Detailed issues analysis
+    detailed_issues = generate_detailed_issues_analysis(all_content, all_filenames)
+    
+    return status, compliance_matrix, analytics, comparison, recommendations, detailed_issues
 
 def perform_simple_analysis(content: str, providers: List[str], jurisdictions: List[str]) -> Dict:
     """Perform simplified compliance analysis"""
@@ -371,6 +374,269 @@ def generate_simple_recommendations(analysis: Dict) -> str:
     
     return recommendations_md
 
+def generate_detailed_issues_analysis(all_content: List[str], all_filenames: List[str]) -> str:
+    """Generate comprehensive detailed issues analysis for all documents"""
+    
+    issues_html = """
+    <div style="background: #1a1a1a; padding: 20px; border-radius: 12px; border: 1px solid #3a3a3a;">
+        <h3 style="color: #ffffff; margin-top: 0;">🔍 Detailed Issues Analysis</h3>
+        <p style="color: #b0b0b0; margin-bottom: 20px;">Comprehensive breakdown of compliance issues found in each document</p>
+    """
+    
+    for i, (filename, content) in enumerate(zip(all_filenames, all_content)):
+        # Enhanced PII detection with details
+        issues_details = {}
+        
+        # Email detection with examples
+        emails = [x for x in content.split() if '@' in x and '.' in x]
+        if emails:
+            issues_details["📧 Email Addresses"] = {
+                "count": len(emails),
+                "examples": emails[:3],  # Show first 3 examples
+                "risk": "Medium",
+                "description": "Personal email addresses require consent and data protection measures under GDPR/MDPL"
+            }
+        
+        # Mozambican identifiers
+        mozambican_ids = []
+        if 'BI:' in content or 'BI ' in content:
+            mozambican_ids.append("Mozambican BI numbers")
+        if '+258' in content:
+            mozambican_ids.append("Mozambican phone numbers")
+        if mozambican_ids:
+            issues_details["🇲🇿 Mozambican Identifiers"] = {
+                "count": len(mozambican_ids),
+                "examples": mozambican_ids,
+                "risk": "High",
+                "description": "Mozambican personal identifiers subject to MDPL (Mozambique Data Protection Law) regulations"
+            }
+        
+        # Credit card detection with masking
+        cc_matches = re.findall(r'\b(?:\d{4}[\s-]?){3}\d{4}\b', content)
+        if cc_matches:
+            masked_cc = [cc[:4] + " **** **** " + cc[-4:] for cc in cc_matches]
+            issues_details["💳 Credit Card Numbers"] = {
+                "count": len(cc_matches),
+                "examples": masked_cc[:3],
+                "risk": "High",
+                "description": "Financial payment card data requires PCI DSS compliance, encryption, and strict access controls"
+            }
+        
+        # SSN detection with masking
+        ssn_matches = re.findall(r'\b\d{3}-\d{2}-\d{4}\b', content)
+        if ssn_matches:
+            masked_ssn = [ssn[:3] + "-**-****" for ssn in ssn_matches]
+            issues_details["🆔 Social Security Numbers"] = {
+                "count": len(ssn_matches),
+                "examples": masked_ssn[:3],
+                "risk": "Critical",
+                "description": "SSNs are highly sensitive identifiers requiring strict access controls, encryption, and compliance with federal privacy laws"
+            }
+        
+        # Enhanced Medical/health data detection
+        medical_findings = {
+            "conditions": [],
+            "treatments": [],
+            "procedures": [],
+            "medications": [],
+            "medical_identifiers": [],
+            "healthcare_providers": []
+        }
+        
+        # Medical conditions (English and Portuguese)
+        conditions = ['diabetes', 'hipertensão', 'hypertension', 'cancer', 'câncer', 'hepatitis', 'hepatite', 
+                     'HIV', 'AIDS', 'tuberculosis', 'tuberculose', 'pneumonia', 'asthma', 'asma',
+                     'depression', 'depressão', 'anxiety', 'ansiedade', 'bipolar', 'schizophrenia',
+                     'stroke', 'derrame', 'heart attack', 'infarto', 'surgery', 'cirurgia']
+        
+        # Medical treatments and procedures
+        treatments = ['treatment', 'tratamento', 'therapy', 'terapia', 'medication', 'medicação',
+                     'prescription', 'prescrição', 'surgery', 'cirurgia', 'operation', 'operação',
+                     'chemotherapy', 'quimioterapia', 'radiation', 'radiação', 'dialysis', 'diálise']
+        
+        # Healthcare context words
+        healthcare_context = ['patient', 'paciente', 'doctor', 'médico', 'physician', 'nurse', 'enfermeira',
+                             'hospital', 'clinic', 'clínica', 'emergency', 'emergência', 'ambulance', 'ambulância',
+                             'diagnosis', 'diagnóstico', 'symptoms', 'sintomas', 'blood test', 'exame de sangue']
+        
+        # Medical identifiers and records
+        medical_ids = ['medical record', 'prontuário', 'patient ID', 'ID do paciente', 'health insurance',
+                      'seguro saúde', 'medical history', 'histórico médico', 'lab results', 'resultados laboratoriais']
+        
+        # Check for each category
+        content_lower = content.lower()
+        
+        for condition in conditions:
+            if condition.lower() in content_lower:
+                medical_findings["conditions"].append(condition)
+        
+        for treatment in treatments:
+            if treatment.lower() in content_lower:
+                medical_findings["treatments"].append(treatment)
+        
+        for context in healthcare_context:
+            if context.lower() in content_lower:
+                medical_findings["healthcare_providers"].append(context)
+        
+        for med_id in medical_ids:
+            if med_id.lower() in content_lower:
+                medical_findings["medical_identifiers"].append(med_id)
+        
+        # Count total medical indicators
+        total_medical_indicators = sum(len(findings) for findings in medical_findings.values())
+        
+        if total_medical_indicators > 0:
+            # Create comprehensive examples
+            examples = []
+            if medical_findings["conditions"]:
+                examples.append(f"Conditions: {', '.join(set(medical_findings['conditions'][:2]))}")
+            if medical_findings["treatments"]:
+                examples.append(f"Treatments: {', '.join(set(medical_findings['treatments'][:2]))}")
+            if medical_findings["healthcare_providers"]:
+                examples.append(f"Healthcare: {', '.join(set(medical_findings['healthcare_providers'][:2]))}")
+            if medical_findings["medical_identifiers"]:
+                examples.append(f"Records: {', '.join(set(medical_findings['medical_identifiers'][:2]))}")
+            
+            # Determine risk level based on sensitivity
+            if any(sensitive in content_lower for sensitive in ['hiv', 'aids', 'mental health', 'psychiatric', 'addiction']):
+                risk_level = "Critical"
+                risk_description = "Highly sensitive health information requiring special protection under HIPAA/medical privacy laws and additional consent requirements"
+            elif medical_findings["conditions"] or medical_findings["medical_identifiers"]:
+                risk_level = "High"
+                risk_description = "Protected Health Information (PHI) subject to HIPAA regulations, requiring encryption, access controls, and patient consent"
+            else:
+                risk_level = "Medium"
+                risk_description = "Healthcare-related information requiring privacy protection and potential medical confidentiality measures"
+            
+            issues_details["🏥 Medical/Health Data"] = {
+                "count": total_medical_indicators,
+                "examples": examples[:3] if examples else ["Healthcare-related content detected"],
+                "risk": risk_level,
+                "description": risk_description
+            }
+        
+        # Consent analysis
+        consent_missing = True
+        consent_keywords = ['consent', 'consentimento', 'agreement', 'autorização', 'permission', 'acordo']
+        for keyword in consent_keywords:
+            if keyword.lower() in content.lower():
+                consent_missing = False
+                break
+        
+        if consent_missing:
+            issues_details["⚠️ Missing Consent"] = {
+                "count": 1,
+                "examples": ["No consent indicators found in document"],
+                "risk": "Medium",
+                "description": "Explicit consent required for personal data processing under GDPR, MDPL, and other privacy regulations"
+            }
+        
+        # Phone number detection
+        phone_patterns = re.findall(r'\+\d{1,3}[\s-]?\d{2,3}[\s-]?\d{3}[\s-]?\d{3,4}', content)
+        if phone_patterns:
+            issues_details["📞 Phone Numbers"] = {
+                "count": len(phone_patterns),
+                "examples": phone_patterns[:3],
+                "risk": "Medium",
+                "description": "Phone numbers are personal data requiring protection under data privacy laws"
+            }
+        
+        # Calculate overall risk for this document
+        critical_count = sum(1 for issue in issues_details.values() if issue["risk"] == "Critical")
+        high_risk_count = sum(1 for issue in issues_details.values() if issue["risk"] == "High")
+        medium_risk_count = sum(1 for issue in issues_details.values() if issue["risk"] == "Medium")
+        
+        if critical_count >= 1:
+            doc_risk = "Critical"
+            doc_risk_color = "#8b0000"
+        elif high_risk_count >= 2:
+            doc_risk = "High"
+            doc_risk_color = "#ff4444"
+        elif high_risk_count >= 1 or medium_risk_count >= 3:
+            doc_risk = "Medium"
+            doc_risk_color = "#ffaa00"
+        else:
+            doc_risk = "Low"
+            doc_risk_color = "#44ff44"
+        
+        # Generate document section
+        issues_html += f"""
+        <div style="background: #2d2d2d; padding: 20px; border-radius: 8px; margin-bottom: 20px; border-left: 4px solid {doc_risk_color};">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                <h4 style="color: #ffffff; margin: 0;">📄 {filename}</h4>
+                <span style="background: {doc_risk_color}; color: white; padding: 6px 12px; border-radius: 6px; font-weight: bold;">
+                    {doc_risk} Risk ({len(issues_details)} issues)
+                </span>
+            </div>
+        """
+        
+        if issues_details:
+            for issue_type, details in issues_details.items():
+                risk_badge_colors = {
+                    "Critical": "#8b0000",
+                    "High": "#ff4444", 
+                    "Medium": "#ffaa00",
+                    "Low": "#44ff44"
+                }
+                risk_badge_color = risk_badge_colors.get(details["risk"], "#ffaa00")
+                
+                issues_html += f"""
+                <div style="background: #333; padding: 15px; border-radius: 6px; margin-bottom: 12px; border-left: 3px solid {risk_badge_color};">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                        <h5 style="color: #ffffff; margin: 0;">{issue_type}</h5>
+                        <span style="background: {risk_badge_color}; color: white; padding: 2px 8px; border-radius: 4px; font-size: 0.8em;">
+                            {details["risk"]} Risk
+                        </span>
+                    </div>
+                    
+                    <p style="color: #e0e0e0; margin: 8px 0; font-size: 0.9em;">
+                        <strong>Count:</strong> {details["count"]} | 
+                        <strong>Examples:</strong> {', '.join(map(str, details["examples"][:2]))}{'...' if len(details["examples"]) > 2 else ''}
+                    </p>
+                    
+                    <p style="color: #b0b0b0; margin: 8px 0 0 0; font-size: 0.85em; font-style: italic;">
+                        {details["description"]}
+                    </p>
+                </div>
+                """
+        else:
+            issues_html += """
+            <div style="background: #333; padding: 15px; border-radius: 6px; border-left: 3px solid #44ff44;">
+                <p style="color: #44ff44; margin: 0; text-align: center;">
+                    ✅ No significant compliance issues detected in this document
+                </p>
+            </div>
+            """
+        
+        issues_html += "</div>"
+    
+    # Summary section
+    total_docs = len(all_filenames)
+    total_issues = sum(len(re.findall(r'[📧🇲🇿💳🆔🏥⚠️📞]', content)) for content in all_content)
+    
+    issues_html += f"""
+        <div style="background: #2d2d2d; padding: 20px; border-radius: 8px; border: 1px solid #4a4a4a; margin-top: 20px;">
+            <h4 style="color: #ffffff; margin: 0 0 15px 0;">📊 Overall Issues Summary</h4>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+                <div style="text-align: center;">
+                    <h5 style="color: #ffffff; margin: 0;">Total Documents</h5>
+                    <p style="color: #4a9eff; font-size: 1.5em; font-weight: bold; margin: 5px 0;">{total_docs}</p>
+                </div>
+                <div style="text-align: center;">
+                    <h5 style="color: #ffffff; margin: 0;">Total Issues</h5>
+                    <p style="color: #ffaa00; font-size: 1.5em; font-weight: bold; margin: 5px 0;">{total_issues}</p>
+                </div>
+                <div style="text-align: center;">
+                    <h5 style="color: #ffffff; margin: 0;">Compliance Status</h5>
+                    <p style="color: {'#8b0000' if total_issues > 10 else '#ff4444' if total_issues > 5 else '#ffaa00' if total_issues > 2 else '#44ff44'}; font-size: 1.2em; font-weight: bold; margin: 5px 0;">{'Critical' if total_issues > 10 else 'High Risk' if total_issues > 5 else 'Needs Review' if total_issues > 2 else 'Good'}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    """
+    
+    return issues_html
+
 def create_simple_interface():
     """Create simplified Mind Enhanced interface"""
     
@@ -467,6 +733,9 @@ def create_simple_interface():
                     with gr.TabItem("🛡️ Compliance Matrix"):
                         compliance_matrix_output = gr.HTML()
                     
+                    with gr.TabItem("🔍 Detailed Issues"):
+                        detailed_issues_output = gr.HTML()
+                    
                     with gr.TabItem("📊 Analytics"):
                         analytics_output = gr.HTML()
                     
@@ -507,20 +776,22 @@ def create_simple_interface():
                 compliance_matrix_output,
                 analytics_output,
                 comparison_output,
-                recommendations_output
+                recommendations_output,
+                detailed_issues_output
             ]
         )
         
         # Clear button handler
         clear_btn.click(
-            fn=lambda: (None, "", "", "", "", ""),
+            fn=lambda: (None, "", "", "", "", "", ""),
             outputs=[
                 file_input,
                 status_output,
                 compliance_matrix_output,
                 analytics_output,
                 comparison_output,
-                recommendations_output
+                recommendations_output,
+                detailed_issues_output
             ]
         )
         
