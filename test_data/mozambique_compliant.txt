@@ -1,0 +1,21 @@
+
+    CONTRATO DE TRABALHO - MOÇAMBIQUE
+    
+    DADOS PESSOAIS:
+    Nome: João Silva Santos
+    Número do BI: 12345678A
+    Telefone: +258 84 123 456
+    Email: joao.santos@empresa.mz
+    Morada: Av. Julius Nyerere, Maputo
+    
+    DADOS SENSÍVEIS:
+    Condição médica: Diabetes tipo 2
+    Filiação religiosa: Católico
+    
+    CONSENTIMENTO:
+    O empregado consente expressamente ao processamento 
+    dos seus dados pessoais para fins de emprego, 
+    conforme a Lei de Protecção de Dados Pessoais nº 3/2022.
+    
+    Data: 14/07/2025
+    

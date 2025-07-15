@@ -11,6 +11,8 @@ language_map:
   ha: africa_ndpr
   yo: africa_ndpr
   ig: africa_ndpr
+  pt: mozambique_dpl
+  pt_mz: mozambique_dpl
   zh: apac_pdpa
   ja: apac_pdpa
   ko: apac_pdpa
@@ -109,6 +111,158 @@ compliance_policies:
       legal_basis: HIPAA_164_512_i
       special_categories: true
       consent_required: true
+
+  mozambique_dpl:
+    contract:
+      redaction_level: strict
+      audit_logging: full
+      encryption: end_to_end
+      retention_policy: 5_years
+      legal_basis: MDPL_Art12_1b
+      special_categories: false
+      consent_required: true
+      cross_border_restrictions: true
+      data_localization_required: true
+      
+    medical:
+      redaction_level: maximum
+      audit_logging: full
+      encryption: end_to_end
+      retention_policy: mdpl_article_28
+      legal_basis: MDPL_Art15_2h
+      special_categories: true
+      consent_required: true
+      explicit_consent_required: true
+      cross_border_restrictions: true
+      data_localization_required: true
+      
+    financial:
+      redaction_level: strict
+      audit_logging: full
+      encryption: end_to_end
+      retention_policy: 7_years
+      legal_basis: MDPL_Art12_1c
+      special_categories: false
+      consent_required: true
+      cross_border_restrictions: true
+      regulatory_approval_required: true
+      
+    research:
+      redaction_level: maximum
+      audit_logging: full
+      encryption: end_to_end
+      retention_policy: ethics_committee_mz
+      legal_basis: MDPL_Art12_1f
+      special_categories: true
+      consent_required: true
+      explicit_consent_required: true
+      ethics_approval_required: true
+      cross_border_restrictions: true
+      
+    legal:
+      redaction_level: strict
+      audit_logging: full
+      encryption: end_to_end
+      retention_policy: statutory_limitation_mz
+      legal_basis: MDPL_Art12_1b
+      special_categories: false
+      consent_required: true
+      cross_border_restrictions: true
+
+  california:
+    contract:
+      redaction_level: moderate
+      audit_logging: full
+      encryption: field_level
+      retention_policy: ccpa_standard
+      legal_basis: CCPA_1798_100_b
+      special_categories: false
+      consent_required: false
+      right_to_delete: true
+      
+    medical:
+      redaction_level: strict
+      audit_logging: full
+      encryption: end_to_end
+      retention_policy: ccpa_medical
+      legal_basis: CCPA_1798_145_c
+      special_categories: true
+      consent_required: true
+      right_to_delete: true
+      
+    financial:
+      redaction_level: strict
+      audit_logging: full
+      encryption: end_to_end
+      retention_policy: ccpa_financial
+      legal_basis: CCPA_1798_145_a
+      special_categories: false
+      consent_required: false
+      right_to_delete: true
+
+  south_africa:
+    contract:
+      redaction_level: strict
+      audit_logging: full
+      encryption: end_to_end
+      retention_policy: 5_years
+      legal_basis: POPIA_Art11_1b
+      special_categories: false
+      consent_required: true
+      cross_border_restrictions: true
+      
+    medical:
+      redaction_level: maximum
+      audit_logging: full
+      encryption: end_to_end
+      retention_policy: popia_medical
+      legal_basis: POPIA_Art32_1a
+      special_categories: true
+      consent_required: true
+      explicit_consent_required: true
+      cross_border_restrictions: true
+      
+    financial:
+      redaction_level: strict
+      audit_logging: full
+      encryption: end_to_end
+      retention_policy: 7_years
+      legal_basis: POPIA_Art11_1c
+      special_categories: false
+      consent_required: true
+      cross_border_restrictions: true
+
+  nigeria:
+    contract:
+      redaction_level: strict
+      audit_logging: full
+      encryption: end_to_end
+      retention_policy: 5_years
+      legal_basis: NDPR_Art6_1b
+      special_categories: false
+      consent_required: true
+      data_localization_required: true
+      
+    medical:
+      redaction_level: maximum
+      audit_logging: full
+      encryption: end_to_end
+      retention_policy: ndpr_article_25
+      legal_basis: NDPR_Art9_2h
+      special_categories: true
+      consent_required: true
+      explicit_consent_required: true
+      data_localization_required: true
+      
+    financial:
+      redaction_level: strict
+      audit_logging: full
+      encryption: end_to_end
+      retention_policy: 7_years
+      legal_basis: NDPR_Art6_1c
+      special_categories: false
+      consent_required: true
+      data_localization_required: true
 
 # PII patterns and detection rules
 pii_patterns:
@@ -236,3 +390,101 @@ retention_policies:
     duration_days: 1825  # 5 * 365
     description: "NDPR data retention limits"
     auto_delete: true
+    
+  mdpl_article_28:
+    duration_days: 1825  # 5 * 365
+    description: "Mozambique DPL medical data retention"
+    auto_delete: true
+    data_localization_required: true
+    
+  ethics_committee_mz:
+    duration_days: 2555  # 7 * 365
+    description: "Mozambique ethics committee approval duration"
+    auto_delete: false
+    review_required: true
+    
+  statutory_limitation_mz:
+    duration_days: 3650  # 10 * 365
+    description: "Mozambique statutory limitation period"
+    auto_delete: false
+    
+  ccpa_standard:
+    duration_days: 1095  # 3 * 365
+    description: "CCPA standard retention period"
+    right_to_delete: true
+    
+  ccpa_medical:
+    duration_days: 2190  # 6 * 365
+    description: "CCPA medical data retention"
+    right_to_delete: true
+    special_protection: true
+    
+  ccpa_financial:
+    duration_days: 2555  # 7 * 365
+    description: "CCPA financial data retention"
+    right_to_delete: true
+    
+  popia_medical:
+    duration_days: 2190  # 6 * 365
+    description: "POPIA medical data retention"
+    auto_delete: true
+    cross_border_restrictions: true
+
+# Regional-specific PII patterns
+regional_pii_patterns:
+  mozambique_dpl:
+    # Mozambican ID numbers
+    mozambican_id:
+      patterns:
+        - "\\b\\d{13}[A-Z]\\b"  # Mozambican national ID format
+        - "\\bBI[\\s]*\\d{8}[A-Z]\\b"  # BI (Bilhete de Identidade) format
+      confidence: 0.9
+      redaction: "[MOZAMBICAN_ID_REDACTED]"
+      
+    # Mozambican phone numbers
+    mozambican_phone:
+      patterns:
+        - "\\+258[\\s-]?[82][0-9][\\s-]?\\d{3}[\\s-]?\\d{3}\\b"  # +258 format
+        - "\\b[82][0-9][\\s-]?\\d{3}[\\s-]?\\d{3}\\b"  # Local format
+      confidence: 0.85
+      redaction: "[MOZAMBICAN_PHONE_REDACTED]"
+      
+    # Portuguese names (common in Mozambique)
+    portuguese_names:
+      patterns:
+        - "\\b[A-ZÁÀÂÃÉÈÊÍÌÎÓÒÔÕÚÙÛ][a-záàâãéèêíìîóòôõúùû]+(\\s+[A-ZÁÀÂÃÉÈÊÍÌÎÓÒÔÕÚÙÛ][a-záàâãéèêíìîóòôõúùû]+)*\\b"
+      confidence: 0.7
+      redaction: "[NOME_REDACTED]"
+      
+  south_africa:
+    # South African ID numbers
+    sa_id:
+      patterns:
+        - "\\b\\d{13}\\b"  # SA ID format: YYMMDDGGGGSAZ
+      confidence: 0.9
+      redaction: "[SA_ID_REDACTED]"
+      
+    # South African phone numbers
+    sa_phone:
+      patterns:
+        - "\\+27[\\s-]?[1-9][0-9][\\s-]?\\d{3}[\\s-]?\\d{4}\\b"
+        - "\\b0[1-9][0-9][\\s-]?\\d{3}[\\s-]?\\d{4}\\b"
+      confidence: 0.85
+      redaction: "[SA_PHONE_REDACTED]"
+      
+  nigeria:
+    # Nigerian phone numbers
+    nigerian_phone:
+      patterns:
+        - "\\+234[\\s-]?[789][01][\\s-]?\\d{4}[\\s-]?\\d{4}\\b"
+        - "\\b0[789][01][\\s-]?\\d{4}[\\s-]?\\d{4}\\b"
+      confidence: 0.85
+      redaction: "[NIGERIAN_PHONE_REDACTED]"
+      
+    # Nigerian BVN (Bank Verification Number)
+    nigerian_bvn:
+      patterns:
+        - "\\bBVN[:\\s]*\\d{11}\\b"
+        - "\\b\\d{11}\\b"  # Generic 11-digit pattern (lower confidence)
+      confidence: 0.8
+      redaction: "[BVN_REDACTED]"

@@ -1,0 +1,23 @@
+
+    INTERNATIONAL DATA TRANSFER AGREEMENT
+    
+    PARTIES:
+    US Entity: Tech Corp, Contact: john.smith@techcorp.com, SSN: 123-45-6789
+    EU Entity: Euro GmbH, Contact: hans@euro.de, +49 30 12345678
+    MZ Entity: Empresa Moz Lda, Contact: maria@empresamoz.mz, BI: 87654321B
+    
+    PURPOSE: Cross-border health research data processing
+    
+    DATA CATEGORIES:
+    - Genetic information
+    - Health records
+    - Biometric data
+    
+    COMPLIANCE ISSUES:
+    ❌ No adequate safeguards specified for US transfers
+    ❌ Missing explicit consent for special categories
+    ❌ No data localization assessment for Mozambique
+    ❌ Inadequate retention period specification
+    
+    Date: 14/07/2025
+    

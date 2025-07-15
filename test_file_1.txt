@@ -1,0 +1,12 @@
+DOCUMENTO DE TESTE 1 - MÉDICO
+
+Paciente: Maria Santos Silva
+BI: 987654321B
+Telefone: +258 85 234 567
+Email: maria.santos@hospital.mz
+
+Diagnóstico: Hipertensão arterial
+Tratamento: Medicação anti-hipertensiva
+Consentimento: A paciente consente expressamente ao tratamento médico e processamento dos seus dados pessoais.
+
+Data: 2024-01-15

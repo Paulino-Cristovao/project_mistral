@@ -1,0 +1,22 @@
+
+        REGISTO MÉDICO - HOSPITAL CENTRAL DE MAPUTO
+        
+        DADOS DO PACIENTE:
+        Nome: Maria João Santos
+        Número do BI: 123456789A
+        Telefone: +258 84 123 456
+        Endereço: Av. 25 de Setembro, Maputo
+        
+        INFORMAÇÕES MÉDICAS:
+        Diagnóstico: Diabetes Tipo 2
+        Medicação: Metformina 500mg
+        Alergias: Penicilina
+        Grupo Sanguíneo: O+
+        
+        CONSENTIMENTO:
+        A paciente consente expressamente ao processamento
+        dos seus dados pessoais para fins médicos, conforme
+        a Lei de Protecção de Dados Pessoais nº 3/2022.
+        
+        Data: 14/07/2025
+        

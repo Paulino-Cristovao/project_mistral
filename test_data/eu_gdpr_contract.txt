@@ -1,0 +1,24 @@
+
+        EMPLOYMENT CONTRACT - EUROPEAN UNION
+        
+        EMPLOYEE DATA:
+        Name: Hans Mueller
+        Email: hans.mueller@company.eu
+        Phone: +49 30 12345678
+        Address: Alexanderplatz 1, Berlin, Germany
+        
+        PROCESSING INFORMATION:
+        Legal basis: Article 6(1)(b) GDPR - Contract performance
+        Data categories: Contact details, employment data
+        Retention period: 7 years after contract termination
+        
+        DATA SUBJECT RIGHTS:
+        Right to access, rectification, erasure, portability,
+        and objection as per Articles 15-21 GDPR.
+        
+        CROSS-BORDER TRANSFERS:
+        Data may be transferred to subsidiaries within the EU.
+        Adequate safeguards in place per Chapter V GDPR.
+        
+        Date: 14/07/2025
+        

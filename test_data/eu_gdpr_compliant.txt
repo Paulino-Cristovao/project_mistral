@@ -1,0 +1,21 @@
+
+    EMPLOYMENT CONTRACT - EUROPEAN UNION
+    
+    PERSONAL DATA:
+    Name: Marie Dubois
+    Email: marie.dubois@company.eu
+    Phone: +33 1 23 45 67 89
+    Address: 123 Rue de la Paix, Paris, France
+    
+    SPECIAL CATEGORIES:
+    Health condition: Hypertension
+    Union membership: CGT
+    
+    LEGAL BASIS:
+    Processing is based on Article 6(1)(b) GDPR for contract performance
+    and Article 9(2)(h) GDPR for health data processing.
+    
+    Data subject rights information provided separately.
+    
+    Date: 14/07/2025
+    

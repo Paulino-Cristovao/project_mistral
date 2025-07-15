@@ -1,0 +1,13 @@
+TEST DOCUMENT 2 - EU CONTRACT
+
+Name: John Anderson
+ID: EU-12345678
+Phone: +49 30 12345678
+Email: john.anderson@company.eu
+
+GDPR Compliance Statement:
+This document contains personal data processed under Article 6(1)(b) of the GDPR.
+Data subject rights are available upon request.
+Retention period: 7 years from contract termination.
+
+Date: 2024-01-15

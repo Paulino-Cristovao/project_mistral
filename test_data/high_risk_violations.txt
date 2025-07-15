@@ -1,0 +1,34 @@
+
+        CONFIDENTIAL DATA TRANSFER LOG
+        
+        US CONTACT:
+        Name: John Smith
+        SSN: 123-45-6789
+        Email: john.smith@usacorp.com
+        
+        MOZAMBIQUE CONTACT:
+        Nome: António Machel
+        BI: 987654321B
+        Telefone: +258 82 987 654
+        
+        EU CONTACT:
+        Name: Sophie Dubois
+        Email: sophie@eucompany.fr
+        Phone: +33 1 23 45 67 89
+        
+        SENSITIVE DATA:
+        - Medical records from all three regions
+        - Financial information including bank accounts
+        - Biometric data for access control
+        - Political affiliation information
+        
+        COMPLIANCE ISSUES:
+        ❌ No consent documented
+        ❌ No lawful basis specified
+        ❌ Cross-border transfers without safeguards
+        ❌ Special category data without explicit consent
+        ❌ No data subject rights information
+        ❌ Excessive data retention
+        
+        Date: 14/07/2025
+        

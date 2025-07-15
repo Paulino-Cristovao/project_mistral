@@ -1,0 +1,25 @@
+
+    CONTRATO DE TRABALHO - MOÇAMBIQUE
+    
+    DADOS DO EMPREGADO:
+    Nome: João Silva Santos
+    Número do BI: 12345678A
+    Telefone: +258 84 123 456
+    Email: joao.santos@empresa.mz
+    Morada: Av. Julius Nyerere, Maputo
+    
+    DADOS MÉDICOS:
+    Condição: Diabetes tipo 2
+    Alergias: Penicilina
+    
+    DADOS FINANCEIROS:
+    Salário: 25,000 MZN
+    Conta bancária: 1234567890
+    
+    CONSENTIMENTO:
+    O empregado consente expressamente ao processamento 
+    dos seus dados pessoais para fins de emprego.
+    
+    Este contrato está sujeito à Lei de Protecção de 
+    Dados Pessoais de Moçambique.
+    

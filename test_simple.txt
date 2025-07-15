@@ -1,0 +1,11 @@
+TESTE SIMPLES DE DOCUMENTO
+
+Nome: João Silva Santos
+BI: 123456789A
+Telefone: +258 84 123 456
+Email: joao@empresa.mz
+
+Informações médicas: Diabetes
+Consentimento: O titular dos dados consente ao processamento.
+
+Este é um documento de teste para verificar se o sistema está funcionando corretamente.

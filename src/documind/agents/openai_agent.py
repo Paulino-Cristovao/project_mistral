@@ -26,7 +26,7 @@ class OpenAIAgent(BaseAgent):
     def __init__(
         self,
         api_key: str,
-        model: str = "gpt-4-vision-preview",
+        model: str = "gpt-4",
         config: Optional[Dict[str, Any]] = None
     ):
         """

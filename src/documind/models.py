@@ -22,9 +22,15 @@ class Jurisdiction(str, Enum):
     """Regulatory jurisdictions"""
     EU_GDPR = "eu_gdpr"
     AFRICA_NDPR = "africa_ndpr"
+    MOZAMBIQUE_DPL = "mozambique_dpl"
     US_HIPAA = "us_hipaa"
+    US_CCPA = "us_ccpa"
+    CALIFORNIA = "california"
+    SOUTH_AFRICA = "south_africa"
+    NIGERIA = "nigeria"
     APAC_PDPA = "apac_pdpa"
     UK_GDPR = "uk_gdpr"
+    COHERE = "cohere"
     UNKNOWN = "unknown"
 
 
@@ -45,6 +51,17 @@ class PrivacyImpact(str, Enum):
     CRITICAL = "critical"
 
 
+class AIProvider(str, Enum):
+    """AI model providers"""
+    OPENAI = "openai"
+    MISTRAL = "mistral"
+    GEMINI = "gemini"
+    GROK = "grok" 
+    COHERE = "cohere"
+    CLAUDE = "claude"
+    AUTO = "auto"
+
+
 class ProcessingStatus(str, Enum):
     """Document processing status"""
     PENDING = "pending"
@@ -52,6 +69,22 @@ class ProcessingStatus(str, Enum):
     COMPLETED = "completed"
     FAILED = "failed"
     PARTIAL = "partial"
+
+
+class RiskLevel(str, Enum):
+    """Risk assessment levels"""
+    LOW = "low"
+    MEDIUM = "medium"
+    HIGH = "high"
+    CRITICAL = "critical"
+
+
+class ComplianceStatus(str, Enum):
+    """Compliance check status"""
+    COMPLIANT = "compliant"
+    NON_COMPLIANT = "non_compliant"
+    NEEDS_REVIEW = "needs_review"
+    UNKNOWN = "unknown"
 
 
 class EntityType(str, Enum):
@@ -155,3 +188,82 @@ class AuditLogEntry(BaseModel):
     details: Dict[str, Any] = Field(default_factory=dict, description="Additional details")
     compliance_impact: PrivacyImpact = Field(..., description="Privacy impact of action")
     retention_category: str = Field(..., description="Data retention category")
+
+
+class RegionalCompliance(BaseModel):
+    """Regional data protection compliance analysis"""
+    jurisdiction: Jurisdiction = Field(..., description="Regulatory jurisdiction")
+    compliance_status: ComplianceStatus = Field(..., description="Overall compliance status")
+    risk_level: RiskLevel = Field(..., description="Privacy breach risk level")
+    applicable_laws: List[str] = Field(default_factory=list, description="Applicable laws and regulations")
+    violations: List[str] = Field(default_factory=list, description="Identified violations")
+    recommendations: List[str] = Field(default_factory=list, description="Compliance recommendations")
+    processing_lawful_basis: Optional[str] = Field(None, description="Lawful basis for processing")
+    consent_required: bool = Field(False, description="Whether explicit consent is required")
+    cross_border_restrictions: bool = Field(False, description="Cross-border transfer restrictions")
+    data_subject_rights: List[str] = Field(default_factory=list, description="Applicable data subject rights")
+    retention_limits: Optional[str] = Field(None, description="Data retention limits")
+    breach_notification_required: bool = Field(False, description="Breach notification requirements")
+
+
+class ProviderComplianceResult(BaseModel):
+    """Compliance result for a specific AI provider"""
+    provider: AIProvider = Field(..., description="AI provider")
+    processing_result: Optional[ProcessingResult] = Field(None, description="Document processing result")
+    regional_compliance: Dict[Jurisdiction, RegionalCompliance] = Field(default_factory=dict)
+    overall_risk_score: float = Field(0.0, ge=0.0, le=1.0, description="Overall risk score")
+    data_protection_violations: List[str] = Field(default_factory=list)
+    provider_available: bool = Field(True, description="Whether provider is available/configured")
+    error_message: Optional[str] = Field(None, description="Error if provider unavailable")
+
+
+class MultiProviderAnalysis(BaseModel):
+    """Comprehensive analysis across multiple AI providers"""
+    document_id: str = Field(..., description="Document identifier")
+    document_filename: str = Field(..., description="Original document filename")
+    analysis_timestamp: datetime = Field(default_factory=datetime.utcnow)
+    selected_jurisdictions: List[Jurisdiction] = Field(..., description="Selected regulatory jurisdictions")
+    provider_results: Dict[AIProvider, ProviderComplianceResult] = Field(default_factory=dict)
+    cross_provider_analysis: Dict[str, Any] = Field(default_factory=dict, description="Cross-provider comparison")
+    highest_risk_provider: Optional[AIProvider] = Field(None, description="Provider with highest risk")
+    safest_provider: Optional[AIProvider] = Field(None, description="Provider with lowest risk")
+    compliance_summary: Dict[str, Any] = Field(default_factory=dict, description="Overall compliance summary")
+    recommendations: List[str] = Field(default_factory=list, description="Overall recommendations")
+
+
+class AnalyticsDashboard(BaseModel):
+    """Analytics dashboard data"""
+    total_documents_processed: int = Field(0, description="Total documents processed")
+    risk_distribution: Dict[RiskLevel, int] = Field(default_factory=dict)
+    compliance_distribution: Dict[ComplianceStatus, int] = Field(default_factory=dict)
+    jurisdiction_analysis: Dict[Jurisdiction, Dict[str, Any]] = Field(default_factory=dict)
+    provider_performance: Dict[AIProvider, Dict[str, float]] = Field(default_factory=dict)
+    privacy_breach_incidents: int = Field(0, description="Number of privacy breach incidents detected")
+    top_risk_factors: List[str] = Field(default_factory=list, description="Most common risk factors")
+    processing_trends: Dict[str, List[float]] = Field(default_factory=dict, description="Processing trends over time")
+    last_updated: datetime = Field(default_factory=datetime.utcnow)
+
+
+class GuardrailsCheckResult(BaseModel):
+    """Result of guardrails compliance check"""
+    jurisdiction: Jurisdiction = Field(..., description="Jurisdiction checked")
+    passed: bool = Field(..., description="Whether guardrails check passed")
+    violations: List[str] = Field(default_factory=list, description="Detected violations")
+    risk_score: float = Field(0.0, ge=0.0, le=1.0, description="Risk score")
+    recommendations: List[str] = Field(default_factory=list, description="Recommended actions")
+    blocked_content: List[str] = Field(default_factory=list, description="Content blocked by guardrails")
+    processing_allowed: bool = Field(True, description="Whether processing should be allowed")
+    
+    
+class DocumentComparisonMatrix(BaseModel):
+    """Document comparison across multiple providers and jurisdictions"""
+    document_id: str = Field(..., description="Document identifier")
+    providers_tested: List[AIProvider] = Field(..., description="AI providers tested")
+    jurisdictions_tested: List[Jurisdiction] = Field(..., description="Jurisdictions tested")
+    compliance_matrix: Dict[str, Dict[str, ComplianceStatus]] = Field(default_factory=dict)
+    risk_matrix: Dict[str, Dict[str, RiskLevel]] = Field(default_factory=dict)
+    processing_success_matrix: Dict[str, Dict[str, bool]] = Field(default_factory=dict)
+    best_provider_per_jurisdiction: Dict[Jurisdiction, AIProvider] = Field(default_factory=dict)
+    worst_provider_per_jurisdiction: Dict[Jurisdiction, AIProvider] = Field(default_factory=dict)
+    overall_safest_provider: Optional[AIProvider] = Field(None)
+    analysis_summary: str = Field("", description="Human-readable analysis summary")

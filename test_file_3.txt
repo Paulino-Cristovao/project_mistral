@@ -1,0 +1,13 @@
+HIGH RISK DOCUMENT 3
+
+Personal Information:
+- Name: Carlos Ndeve Zuma
+- Mozambican ID: BI: 555666777C
+- Phone: +258 82 999 888
+- Email: carlos@riskdata.mz
+- Medical Info: HIV positive, diabetes type 2
+- Financial: Bank account 1234567890
+
+NO CONSENT PROVIDED - MAJOR VIOLATION
+Cross-border data transfer to US servers without authorization.
+No data protection measures implemented.
