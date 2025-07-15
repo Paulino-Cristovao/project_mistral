@@ -377,6 +377,8 @@ def generate_simple_recommendations(analysis: Dict) -> str:
 def generate_detailed_issues_analysis(all_content: List[str], all_filenames: List[str]) -> str:
     """Generate comprehensive detailed issues analysis for all documents"""
     
+    import re  # Import re module for regex operations
+    
     issues_html = """
     <div style="background: #1a1a1a; padding: 20px; border-radius: 12px; border: 1px solid #3a3a3a;">
         <h3 style="color: #ffffff; margin-top: 0;">🔍 Detailed Issues Analysis</h3>
