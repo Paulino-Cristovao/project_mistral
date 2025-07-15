@@ -433,7 +433,7 @@ def generate_detailed_issues_analysis(all_content: List[str], all_filenames: Lis
                 "description": "SSNs are highly sensitive identifiers requiring strict access controls, encryption, and compliance with federal privacy laws"
             }
         
-        # Enhanced Medical/health data detection
+        # Enhanced Medical/health data detection with context awareness
         medical_findings = {
             "conditions": [],
             "treatments": [],
@@ -443,44 +443,62 @@ def generate_detailed_issues_analysis(all_content: List[str], all_filenames: Lis
             "healthcare_providers": []
         }
         
-        # Medical conditions (English and Portuguese)
+        # Context exclusions - avoid false positives from technical/academic contexts
+        technical_contexts = [
+            'image analysis', 'data analysis', 'computer vision', 'machine learning', 'AI', 'artificial intelligence',
+            'research', 'algorithm', 'technology', 'development', 'software', 'system', 'application',
+            'university', 'study', 'academic', 'thesis', 'project', 'technical', 'engineering'
+        ]
+        
+        # Check if this appears to be a technical/academic document
+        is_technical_context = any(context.lower() in content.lower() for context in technical_contexts)
+        
+        # Medical conditions (English and Portuguese) - only flag if not in technical context
         conditions = ['diabetes', 'hipertensão', 'hypertension', 'cancer', 'câncer', 'hepatitis', 'hepatite', 
                      'HIV', 'AIDS', 'tuberculosis', 'tuberculose', 'pneumonia', 'asthma', 'asma',
                      'depression', 'depressão', 'anxiety', 'ansiedade', 'bipolar', 'schizophrenia',
-                     'stroke', 'derrame', 'heart attack', 'infarto', 'surgery', 'cirurgia']
+                     'stroke', 'derrame', 'heart attack', 'infarto']
         
-        # Medical treatments and procedures
+        # Medical treatments and procedures - exclude technical research contexts
         treatments = ['treatment', 'tratamento', 'therapy', 'terapia', 'medication', 'medicação',
-                     'prescription', 'prescrição', 'surgery', 'cirurgia', 'operation', 'operação',
-                     'chemotherapy', 'quimioterapia', 'radiation', 'radiação', 'dialysis', 'diálise']
+                     'prescription', 'prescrição', 'chemotherapy', 'quimioterapia', 'radiation', 'radiação', 'dialysis', 'diálise']
         
-        # Healthcare context words
-        healthcare_context = ['patient', 'paciente', 'doctor', 'médico', 'physician', 'nurse', 'enfermeira',
-                             'hospital', 'clinic', 'clínica', 'emergency', 'emergência', 'ambulance', 'ambulância',
-                             'diagnosis', 'diagnóstico', 'symptoms', 'sintomas', 'blood test', 'exame de sangue']
+        # Healthcare context words - be more specific to avoid false positives
+        healthcare_context = ['patient care', 'paciente', 'doctor visit', 'médico consulta', 'physician appointment', 
+                             'nurse', 'enfermeira', 'hospital admission', 'clinic visit', 'clínica consulta', 
+                             'emergency room', 'emergência médica', 'ambulance', 'ambulância']
         
-        # Medical identifiers and records
-        medical_ids = ['medical record', 'prontuário', 'patient ID', 'ID do paciente', 'health insurance',
-                      'seguro saúde', 'medical history', 'histórico médico', 'lab results', 'resultados laboratoriais']
+        # Medical identifiers and records - very specific to actual medical records
+        medical_ids = ['medical record number', 'prontuário médico', 'patient ID number', 'ID do paciente', 
+                      'health insurance card', 'seguro saúde número', 'medical history record', 'histórico médico pessoal', 
+                      'lab test results', 'resultados exames médicos']
         
-        # Check for each category
+        # Check for each category - but skip if in technical/academic context
         content_lower = content.lower()
         
-        for condition in conditions:
-            if condition.lower() in content_lower:
-                medical_findings["conditions"].append(condition)
+        # Only detect medical conditions if not in a technical research context
+        if not is_technical_context:
+            for condition in conditions:
+                if condition.lower() in content_lower:
+                    medical_findings["conditions"].append(condition)
+            
+            for treatment in treatments:
+                if treatment.lower() in content_lower:
+                    medical_findings["treatments"].append(treatment)
+            
+            for context in healthcare_context:
+                if context.lower() in content_lower:
+                    medical_findings["healthcare_providers"].append(context)
         
-        for treatment in treatments:
-            if treatment.lower() in content_lower:
-                medical_findings["treatments"].append(treatment)
-        
-        for context in healthcare_context:
-            if context.lower() in content_lower:
-                medical_findings["healthcare_providers"].append(context)
-        
+        # Always check for actual medical records/IDs (these are always relevant)
         for med_id in medical_ids:
             if med_id.lower() in content_lower:
                 medical_findings["medical_identifiers"].append(med_id)
+        
+        # Additional check: if "medical" appears in technical contexts, exclude it
+        if is_technical_context and any(tech in content_lower for tech in ['medical image', 'medical ai', 'medical research', 'medical data', 'medical algorithm']):
+            # This is likely technical work about medical AI/research, not actual medical data
+            pass  # Skip medical detection for these contexts
         
         # Count total medical indicators
         total_medical_indicators = sum(len(findings) for findings in medical_findings.values())
