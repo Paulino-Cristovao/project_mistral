@@ -13,8 +13,154 @@ from pathlib import Path
 from datetime import datetime
 from typing import Dict, List, Any, Tuple
 
+# Load environment variables from .env file
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    # If python-dotenv is not installed, try manual loading
+    env_file = Path(__file__).parent / ".env"
+    if env_file.exists():
+        with open(env_file) as f:
+            for line in f:
+                if line.strip() and not line.startswith('#') and '=' in line:
+                    key, value = line.strip().split('=', 1)
+                    os.environ[key] = value
+
 # Add src directory to path
 sys.path.insert(0, str(Path(__file__).parent / "src"))
+
+def get_legal_references_database():
+    """📚 Comprehensive legal references database for data protection laws"""
+    
+    return {
+        "EU (GDPR)": {
+            "law_name": "General Data Protection Regulation (GDPR)",
+            "regulation_number": "Regulation (EU) 2016/679",
+            "effective_date": "May 25, 2018",
+            "email_addresses": {
+                "articles": ["Art. 6 (Lawfulness of processing)", "Art. 7 (Conditions for consent)"],
+                "requirements": "Article 6(1)(a) - Consent must be freely given, specific, informed and unambiguous",
+                "citation": "GDPR Art. 6(1)(a) & Art. 7 - Consent for personal data processing",
+                "penalty": "Up to 4% of annual global turnover or €20 million (Art. 83)"
+            },
+            "phone_numbers": {
+                "articles": ["Art. 4(1) (Definition of personal data)", "Art. 6 (Lawfulness)"],
+                "requirements": "Phone numbers are personal data requiring lawful basis under Article 6",
+                "citation": "GDPR Art. 4(1) & Art. 6 - Phone numbers as personal data",
+                "penalty": "Up to 4% of annual global turnover or €20 million"
+            },
+            "missing_consent": {
+                "articles": ["Art. 7 (Conditions for consent)", "Art. 13 (Information to be provided)"],
+                "requirements": "Consent must be demonstrable and withdrawable (Art. 7(1))",
+                "citation": "GDPR Art. 7(1) & Art. 13 - Consent requirements and information duties",
+                "penalty": "Up to 4% of annual global turnover or €20 million"
+            },
+            "medical_data": {
+                "articles": ["Art. 9 (Special categories of personal data)", "Art. 6 (Lawfulness)"],
+                "requirements": "Health data requires explicit consent or other Art. 9(2) conditions",
+                "citation": "GDPR Art. 9(2)(a) - Explicit consent for health data processing",
+                "penalty": "Up to 4% of annual global turnover or €20 million"
+            }
+        },
+        "Mozambique": {
+            "law_name": "Mozambique Data Protection Law (MDPL)",
+            "regulation_number": "Law No. 24/2021",
+            "effective_date": "December 31, 2021",
+            "email_addresses": {
+                "articles": ["Art. 8 (Lawfulness of processing)", "Art. 9 (Consent)"],
+                "requirements": "Article 9 - Consent must be free, specific, informed and unambiguous",
+                "citation": "MDPL Art. 8 & Art. 9 - Lawful basis and consent for email processing",
+                "penalty": "Up to 4% of annual turnover or 20 million meticais (Art. 66)"
+            },
+            "phone_numbers": {
+                "articles": ["Art. 4 (Definition of personal data)", "Art. 8 (Lawfulness)"],
+                "requirements": "Phone numbers are personal data requiring lawful processing basis",
+                "citation": "MDPL Art. 4 & Art. 8 - Phone numbers as personal data",
+                "penalty": "Up to 4% of annual turnover or 20 million meticais"
+            },
+            "missing_consent": {
+                "articles": ["Art. 9 (Consent)", "Art. 15 (Information to data subjects)"],
+                "requirements": "Consent must be documented and easily withdrawable (Art. 9(3))",
+                "citation": "MDPL Art. 9(3) & Art. 15 - Consent documentation and information duties",
+                "penalty": "Up to 2% of annual turnover or 10 million meticais"
+            },
+            "medical_data": {
+                "articles": ["Art. 11 (Special categories)", "Art. 8 (Lawfulness)"],
+                "requirements": "Health data requires explicit consent or other Art. 11(2) conditions",
+                "citation": "MDPL Art. 11(2)(a) - Explicit consent for health data",
+                "penalty": "Up to 4% of annual turnover or 20 million meticais"
+            }
+        },
+        "South Africa": {
+            "law_name": "Protection of Personal Information Act (POPIA)",
+            "regulation_number": "Act No. 4 of 2013",
+            "effective_date": "July 1, 2021",
+            "email_addresses": {
+                "articles": ["Section 11 (Consent)", "Section 12 (Justification)"],
+                "requirements": "Section 11 - Consent must be voluntary, specific and informed",
+                "citation": "POPIA Sec. 11 & 12 - Consent and justification for email processing",
+                "penalty": "Up to R10 million or 10 years imprisonment (Sec. 107)"
+            },
+            "phone_numbers": {
+                "articles": ["Section 1 (Definition)", "Section 11 (Consent)"],
+                "requirements": "Phone numbers are personal information requiring lawful processing",
+                "citation": "POPIA Sec. 1 & 11 - Phone numbers as personal information",
+                "penalty": "Up to R10 million or 10 years imprisonment"
+            }
+        },
+        "Nigeria": {
+            "law_name": "Nigeria Data Protection Regulation (NDPR)",
+            "regulation_number": "NDPR 2019",
+            "effective_date": "January 25, 2019",
+            "email_addresses": {
+                "articles": ["Art. 2.1 (Lawful basis)", "Art. 2.2 (Consent)"],
+                "requirements": "Article 2.2 - Consent must be freely given, specific, informed",
+                "citation": "NDPR Art. 2.1 & 2.2 - Lawful basis and consent for email processing",
+                "penalty": "Up to 2% of annual gross revenue or ₦10 million (Art. 4.2)"
+            },
+            "phone_numbers": {
+                "articles": ["Art. 1.3 (Definition)", "Art. 2.1 (Lawful basis)"],
+                "requirements": "Phone numbers are personal data requiring lawful processing basis",
+                "citation": "NDPR Art. 1.3 & 2.1 - Phone numbers as personal data",
+                "penalty": "Up to 2% of annual gross revenue or ₦10 million"
+            }
+        },
+        "California": {
+            "law_name": "California Consumer Privacy Act (CCPA)",
+            "regulation_number": "Cal. Civ. Code § 1798.100 et seq.",
+            "effective_date": "January 1, 2020",
+            "email_addresses": {
+                "articles": ["§ 1798.100 (Right to know)", "§ 1798.120 (Right to opt-out)"],
+                "requirements": "Section 1798.100 - Consumers have right to know about personal info collection",
+                "citation": "CCPA § 1798.100 & § 1798.120 - Consumer rights for email processing",
+                "penalty": "Up to $7,500 per violation (§ 1798.155)"
+            },
+            "phone_numbers": {
+                "articles": ["§ 1798.140 (Definition)", "§ 1798.100 (Right to know)"],
+                "requirements": "Phone numbers are personal information under CCPA definition",
+                "citation": "CCPA § 1798.140 & § 1798.100 - Phone numbers as personal information",
+                "penalty": "Up to $7,500 per violation"
+            }
+        },
+        "US (HIPAA)": {
+            "law_name": "Health Insurance Portability and Accountability Act (HIPAA)",
+            "regulation_number": "45 CFR Parts 160 & 164",
+            "effective_date": "April 14, 2003",
+            "medical_data": {
+                "articles": ["45 CFR 164.502 (Uses and disclosures)", "45 CFR 164.508 (Authorization)"],
+                "requirements": "45 CFR 164.508 - Authorization required for PHI use/disclosure",
+                "citation": "HIPAA 45 CFR 164.502 & 164.508 - PHI authorization requirements",
+                "penalty": "Up to $1.5 million per violation (45 CFR 160.404)"
+            },
+            "email_addresses": {
+                "articles": ["45 CFR 164.512 (Uses and disclosures)"],
+                "requirements": "Email addresses in healthcare context may be PHI requiring authorization",
+                "citation": "HIPAA 45 CFR 164.512 - Email in healthcare as potential PHI",
+                "penalty": "Up to $1.5 million per violation"
+            }
+        }
+    }
 
 def check_api_keys():
     """Check available API keys"""
@@ -26,6 +172,130 @@ def check_api_keys():
         "mistral": mistral_available,
         "any_available": openai_available or mistral_available
     }
+
+def get_legal_references_for_issue(issue_type: str, jurisdictions: List[str]) -> List[Dict[str, str]]:
+    """📚 Get specific legal references for a compliance issue"""
+    
+    legal_db = get_legal_references_database()
+    references = []
+    
+    for jurisdiction in jurisdictions:
+        if jurisdiction in legal_db:
+            law_info = legal_db[jurisdiction]
+            
+            if issue_type in law_info:
+                issue_info = law_info[issue_type]
+                
+                reference = {
+                    "jurisdiction": jurisdiction,
+                    "law_name": law_info["law_name"],
+                    "regulation_number": law_info["regulation_number"],
+                    "effective_date": law_info["effective_date"],
+                    "articles": issue_info["articles"],
+                    "requirements": issue_info["requirements"],
+                    "citation": issue_info["citation"],
+                    "penalty": issue_info["penalty"]
+                }
+                references.append(reference)
+    
+    return references
+
+def get_legal_references_html(details: Dict) -> str:
+    """Generate HTML for legal references section"""
+    
+    if "legal_references" not in details or not details["legal_references"]:
+        return ""
+    
+    html = '<div style="background: #2a2a2a; padding: 10px; border-radius: 4px; margin-top: 10px; border: 1px solid #4a4a4a;">'
+    html += '<h6 style="color: #44ff44; margin: 0 0 8px 0; font-size: 0.8em;">📚 Legal References:</h6>'
+    
+    for ref in details["legal_references"]:
+        html += f'''
+        <div style="margin-bottom: 8px; padding: 8px; background: #1a1a1a; border-radius: 4px; border-left: 2px solid #44ff44;">
+            <div style="color: #ffffff; font-size: 0.75em; font-weight: bold; margin-bottom: 4px;">
+                {ref["jurisdiction"]} - {ref["law_name"]}
+            </div>
+            <div style="color: #e0e0e0; font-size: 0.7em; margin-bottom: 2px;">
+                <strong>Citation:</strong> {ref["citation"]}
+            </div>
+            <div style="color: #cccccc; font-size: 0.65em; margin-bottom: 2px;">
+                <strong>Requirements:</strong> {ref["requirements"]}
+            </div>
+            <div style="color: #ffaa00; font-size: 0.65em;">
+                <strong>Penalties:</strong> {ref["penalty"]}
+            </div>
+        </div>
+        '''
+    html += '</div>'
+    
+    return html
+
+def generate_batch_summary(analysis: Dict, filenames: List[str]) -> str:
+    """📊 Generate persistent batch summary header"""
+    
+    total_docs = len(filenames)
+    total_pii = sum(analysis["pii_detected"].values())
+    risk_score = analysis["risk_score"]
+    
+    # Determine highest risk jurisdiction
+    highest_risk_jurisdiction = "EU (GDPR)"  # Default
+    highest_risk_level = "Low"
+    
+    for jurisdiction, data in analysis.get("jurisdiction_analysis", {}).items():
+        if data["risk_level"] == "High":
+            highest_risk_jurisdiction = jurisdiction
+            highest_risk_level = "High"
+            break
+        elif data["risk_level"] == "Medium" and highest_risk_level != "High":
+            highest_risk_jurisdiction = jurisdiction
+            highest_risk_level = "Medium"
+    
+    # Risk color coding
+    risk_colors = {
+        "High": "#ff4444",
+        "Medium": "#ff8800", 
+        "Low": "#44ff44"
+    }
+    risk_color = risk_colors.get(highest_risk_level, "#44ff44")
+    
+    # Guardrails status
+    guardrails_info = analysis.get("guardrails", {})
+    protected_items = len(guardrails_info.get("blocked_items", [])) + len(guardrails_info.get("masked_items", []))
+    
+    # Provider status
+    api_keys = check_api_keys()
+    provider_status = "✅ Connected" if api_keys["any_available"] else "⚠️ Demo Mode"
+    
+    summary_html = f"""
+    <div style="background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%); padding: 12px 20px; border-radius: 8px; margin-bottom: 15px; border: 1px solid #3a3a3a; position: sticky; top: 0; z-index: 100;">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
+            <div style="display: flex; align-items: center; gap: 15px; flex-wrap: wrap;">
+                <div style="text-align: center;">
+                    <div style="color: #4a9eff; font-size: 1.2em; font-weight: bold; margin: 0;">{total_docs}</div>
+                    <div style="color: #cccccc; font-size: 0.8em;">Documents</div>
+                </div>
+                <div style="text-align: center;">
+                    <div style="color: #ffaa00; font-size: 1.2em; font-weight: bold; margin: 0;">{total_pii}</div>
+                    <div style="color: #cccccc; font-size: 0.8em;">PII Items</div>
+                </div>
+                <div style="text-align: center;">
+                    <div style="color: {risk_color}; font-size: 1.2em; font-weight: bold; margin: 0;">{highest_risk_level}</div>
+                    <div style="color: #cccccc; font-size: 0.8em;">{highest_risk_jurisdiction}</div>
+                </div>
+                <div style="text-align: center;">
+                    <div style="color: #44ff44; font-size: 1.2em; font-weight: bold; margin: 0;">{protected_items}</div>
+                    <div style="color: #cccccc; font-size: 0.8em;">Protected</div>
+                </div>
+            </div>
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <span style="color: #cccccc; font-size: 0.9em;">{provider_status}</span>
+                <span style="background: {risk_color}; color: #000; padding: 4px 8px; border-radius: 12px; font-size: 0.8em; font-weight: bold;">Risk: {risk_score:.0%}</span>
+            </div>
+        </div>
+    </div>
+    """
+    
+    return summary_html
 
 def apply_smart_guardrails(content: str, jurisdictions: List[str]) -> Dict[str, Any]:
     """🛡️ INNOVATIVE GUARDRAILS: Block/mask sensitive data before AI processing"""
@@ -147,7 +417,7 @@ def analyze_document_simple(
     selected_providers: List[str],
     selected_jurisdictions: List[str],
     risk_assessment_enabled: bool = True
-) -> Tuple[str, str, str, str, str, str]:
+) -> Tuple[str, str, str, str, str, str, str]:
     """
     Simplified document analysis with demo functionality
     """
@@ -196,9 +466,9 @@ def analyze_document_simple(
     
     # Generate outputs
     if len(all_filenames) == 1:
-        status = f"✅ Analysis completed for {all_filenames[0]}"
+        status = f"✅ Analysis complete: {all_filenames[0]}"
     else:
-        status = f"✅ Batch analysis completed for {len(all_filenames)} documents: {', '.join(all_filenames[:3])}{'...' if len(all_filenames) > 3 else ''}"
+        status = f"✅ Analysis complete: {len(all_filenames)} documents"
     
     # Compliance matrix
     compliance_matrix = generate_simple_compliance_matrix(analysis_results)
@@ -213,9 +483,12 @@ def analyze_document_simple(
     recommendations = generate_simple_recommendations(analysis_results)
     
     # Detailed issues analysis
-    detailed_issues = generate_detailed_issues_analysis(all_content, all_filenames)
+    detailed_issues = generate_detailed_issues_analysis(all_content, all_filenames, selected_jurisdictions)
     
-    return status, compliance_matrix, analytics, comparison, recommendations, detailed_issues
+    # Generate persistent batch summary
+    batch_summary = generate_batch_summary(analysis_results, all_filenames)
+    
+    return status, compliance_matrix, analytics, comparison, recommendations, detailed_issues, batch_summary
 
 def perform_simple_analysis(content: str, providers: List[str], jurisdictions: List[str]) -> Dict:
     """Perform simplified compliance analysis with accurate PII detection"""
@@ -661,8 +934,8 @@ def generate_simple_recommendations(analysis: Dict) -> str:
     
     return recommendations_md
 
-def generate_detailed_issues_analysis(all_content: List[str], all_filenames: List[str]) -> str:
-    """Generate comprehensive detailed issues analysis for all documents"""
+def generate_detailed_issues_analysis(all_content: List[str], all_filenames: List[str], selected_jurisdictions: List[str]) -> str:
+    """Generate comprehensive detailed issues analysis for all documents with legal references"""
     
     import re  # Import re module for regex operations
     
@@ -694,11 +967,15 @@ def generate_detailed_issues_analysis(all_content: List[str], all_filenames: Lis
         valid_emails = list(set(valid_emails))  # Remove duplicates
         
         if valid_emails:
+            # Get legal references for email addresses
+            legal_refs = get_legal_references_for_issue("email_addresses", selected_jurisdictions)
+            
             issues_details["📧 Email Addresses"] = {
                 "count": len(valid_emails),
                 "examples": ", ".join(valid_emails[:3]),
                 "risk": "Medium",
-                "description": "Personal email addresses require consent and data protection measures"
+                "description": "Personal email addresses require consent and data protection measures",
+                "legal_references": legal_refs
             }
         
         # Use the same enhanced phone detection as main analysis
@@ -713,11 +990,15 @@ def generate_detailed_issues_analysis(all_content: List[str], all_filenames: Lis
         phones = list(set(phones))  # Remove duplicates
         
         if phones:
+            # Get legal references for phone numbers
+            legal_refs = get_legal_references_for_issue("phone_numbers", selected_jurisdictions)
+            
             issues_details["📞 Phone Numbers"] = {
                 "count": len(phones),
                 "examples": ", ".join(phones[:2]),
                 "risk": "Medium",
-                "description": "Phone numbers are personal data requiring protection"
+                "description": "Phone numbers are personal data requiring protection",
+                "legal_references": legal_refs
             }
         
         # Mozambican identifiers (separate detection)
@@ -726,11 +1007,15 @@ def generate_detailed_issues_analysis(all_content: List[str], all_filenames: Lis
         
         if mozambican_bi or mozambican_phone:
             all_moz_ids = mozambican_bi + mozambican_phone
+            # Get legal references for Mozambican identifiers
+            legal_refs = get_legal_references_for_issue("phone_numbers", ["Mozambique"])  # Use phone_numbers as fallback
+            
             issues_details["🇲🇿 Mozambican Identifiers"] = {
                 "count": len(all_moz_ids),
                 "examples": ", ".join(all_moz_ids[:2]),
                 "risk": "High",
-                "description": "Mozambican personal identifiers subject to MDPL regulations"
+                "description": "Mozambican personal identifiers subject to MDPL regulations",
+                "legal_references": legal_refs
             }
         
         # Credit card detection with masking
@@ -859,6 +1144,7 @@ def generate_detailed_issues_analysis(all_content: List[str], all_filenames: Lis
                     <p style="color: #b0b0b0; margin: 8px 0 0 0; font-size: 0.85em; font-style: italic;">
                         {details["description"]}
                     </p>
+                    {get_legal_references_html(details)}
                 </div>
                 """
         else:
@@ -978,7 +1264,7 @@ def create_simple_interface():
                 
                 risk_assessment = gr.Checkbox(
                     value=True,
-                    label="Enable Guardrails & Risk Assessment"
+                    label="Apply Guardrails & Risk Scoring"
                 )
                 
                 analyze_btn = gr.Button(
@@ -989,13 +1275,29 @@ def create_simple_interface():
             
             # Right Panel - Results
             with gr.Column(scale=2):
+                # Persistent batch summary header
+                batch_summary_output = gr.HTML(visible=False)
+                
+                # Status legend
+                status_legend = gr.HTML("""
+                <div style="background: #2d2d2d; padding: 10px; border-radius: 6px; margin-bottom: 10px; border: 1px solid #3a3a3a;">
+                    <div style="display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; align-items: center;">
+                        <span style="color: #cccccc; font-size: 0.9em; font-weight: bold;">Status Legend:</span>
+                        <span style="color: #44ff44;">✅ Compliant</span>
+                        <span style="color: #ffaa00;">⚠️ Needs Review</span>
+                        <span style="color: #ff4444;">❌ Non-Compliant</span>
+                        <span style="color: #888888;">🔄 Coming Soon</span>
+                    </div>
+                </div>
+                """)
+                
                 status_output = gr.Markdown()
                 
                 with gr.Tabs():
-                    with gr.TabItem("🛡️ Compliance Matrix"):
+                    with gr.TabItem("🛡️ Matrix: by Jurisdiction"):
                         compliance_matrix_output = gr.HTML()
                     
-                    with gr.TabItem("🔍 Detailed Issues"):
+                    with gr.TabItem("🔍 Issues: fix now"):
                         detailed_issues_output = gr.HTML()
                     
                     with gr.TabItem("📊 Analytics"):
@@ -1039,13 +1341,14 @@ def create_simple_interface():
                 analytics_output,
                 comparison_output,
                 recommendations_output,
-                detailed_issues_output
+                detailed_issues_output,
+                batch_summary_output
             ]
         )
         
         # Clear button handler
         clear_btn.click(
-            fn=lambda: (None, "", "", "", "", "", ""),
+            fn=lambda: (None, "", "", "", "", "", "", gr.HTML(visible=False)),
             outputs=[
                 file_input,
                 status_output,
@@ -1053,7 +1356,8 @@ def create_simple_interface():
                 analytics_output,
                 comparison_output,
                 recommendations_output,
-                detailed_issues_output
+                detailed_issues_output,
+                batch_summary_output
             ]
         )
         
